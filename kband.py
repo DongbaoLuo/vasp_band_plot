@@ -80,7 +80,7 @@ def get_bandInfo(inFile = 'OUTCAR'):
             kpt_path[start:end] += kpt_path[start-1]
 
         kpt_path /= kpt_path[-1]
-        kpt_bounds = kpt_path[0::Nk_in_seg]
+        kpt_bounds =  np.concatenate((kpt_path[0::Nk_in_seg], [1.0,]))
     else:
         # get band path
         vkpt_diff = np.diff(vkpts, axis=0)
@@ -90,7 +90,7 @@ def get_bandInfo(inFile = 'OUTCAR'):
 
         # get boundaries of band path
         xx = np.diff(kpt_path)
-        kpt_bounds = kpt_path[np.isclose(xx, 0.0)]
+        kpt_bounds = np.concatenate(([0.0,], kpt_path[np.isclose(xx, 0.0)], [1.0,]))
 
 
     return Efermi, wkpts, kpt_bounds, kpt_path, bands
@@ -150,8 +150,8 @@ ax.set_ylabel('Energy [eV]', fontsize='medium')
 # ax.set_xticks(pos)
 ax.set_xticks(kpt_bounds)
 
-# kpts_name =[xx for xx in 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'][:kpt_bounds.size]
-kpts_name =['M', r'$\Gamma$', 'K', 'M']
+kpts_name =[xx for xx in 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'][:kpt_bounds.size]
+# kpts_name =['M', r'$\Gamma$', 'K', 'M']
 ax.set_xticklabels(kpts_name, kpt_bounds, fontsize='small')                   
 
 ################################################################################
