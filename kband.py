@@ -2,6 +2,7 @@
 
 import os
 import numpy as np
+from mpl_toolkits.axes_grid1 import make_axes_locatable
 
 def cut_gaussian(x, x0, sigma=0.05, cut=8):
     prefix = 1 / sigma / np.sqrt(2*np.pi)
@@ -113,18 +114,29 @@ import matplotlib.pyplot as plt
 
 mpl.rcParams['axes.unicode_minus'] = False
 
-RATIO = 0.66
+# RATIO = 0.66
+#
+# fig, ax = plt.subplots(nrows=1, ncols=1,
+#                        sharex=False,
+#                        sharey=False)
+# plt.subplots_adjust(left=0.09, right=RATIO,
+#                     bottom=0.10, top=0.95,
+#                     wspace=0.10, hspace=0.10)
+# fig.set_size_inches((6, 4))
 
-fig, ax = plt.subplots(nrows=1, ncols=1,
-                       sharex=False,
-                       sharey=False)
-plt.subplots_adjust(left=0.09, right=RATIO,
-                    bottom=0.10, top=0.95,
-                    wspace=0.10, hspace=0.10)
-fig.set_size_inches((6, 4))
-
-axDos = fig.add_axes([RATIO + 0.02, 0.10, 0.30, 0.85])
+# axDos = fig.add_axes([RATIO + 0.02, 0.10, 0.30, 0.85])
 # axDos.yaxis.set_ticks_position('right')
+
+fig = plt.figure()
+fig.set_size_inches((4.0, 4.0))
+
+ax  = plt.subplot(111)
+plt.subplots_adjust(left=0.12, right=0.95,
+                    bottom=0.08, top=0.95,
+                    wspace=0.10, hspace=0.10)
+
+divider = make_axes_locatable(ax)
+axDos = divider.append_axes('right', size='45%', pad=0.10)
 
 clrs = ['r', 'b']
 
@@ -139,12 +151,12 @@ for ii in np.arange(ispin):
 for bd in kpt_bounds:
     ax.axvline(x=bd, ls=':', color='k', lw=0.5, alpha=0.6)
 
-ax.set_ylim(-10, 10)
+ax.set_ylim(-5, 5)
 
 ax.minorticks_on()
 ax.tick_params(which='both', labelsize='small')
 
-ax.set_ylabel('Energy [eV]', fontsize='medium')
+ax.set_ylabel('Energy [eV]', fontsize='small')
 
 # pos = [0,] + list(kpt_bounds) + [1,]
 # ax.set_xticks(pos)
@@ -152,7 +164,7 @@ ax.set_xticks(kpt_bounds)
 
 kpts_name =[xx for xx in 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'][:kpt_bounds.size]
 # kpts_name =['M', r'$\Gamma$', 'K', 'M']
-ax.set_xticklabels(kpts_name, kpt_bounds, fontsize='small')                   
+ax.set_xticklabels(kpts_name, fontsize='small')                   
 
 ################################################################################
 EXTRA = 0.10
@@ -179,9 +191,9 @@ for sp in range(ispin):
 
     axDos.plot(DOS[:,sp], x, ls='-', color=clrs[sp], lw=1.5, alpha=0.6)
 
-axDos.set_xlabel('DOS [a.u.]', fontsize='medium')
+axDos.set_xlabel('DOS [a.u.]', fontsize='small')
 
-axDos.set_ylim(-10, 10)
+axDos.set_ylim(-5, 5)
 axDos.set_xticks([])
 axDos.set_yticklabels([])
 
